@@ -1,0 +1,19 @@
+.table{
+    color: brown;
+    background-color: aquamarine;
+}
+.header{
+    /* background-color: yellowgreen; */
+}
+.header-text{
+    min-width :200px;
+    align-content:center;
+    border-bottom: aquamarine;
+    border-top: brown;
+}
+table,th{
+    border:1px solid black;
+}
+td{
+    border:1px solid black;
+}

@@ -21,7 +21,6 @@ import AddNewButton from './components/AddNewButton';
 import MobileSortDropdown from './components/MobileSortDropdown';
 import DeleteConfirmModal from './components/DeleteConfirmModal';
 import "../table.scss"
-import  DT from"./DT"
 
 const expiredApp = () => {
   const title = 'Quản Lý Tin';
@@ -280,7 +279,6 @@ const expiredApp = () => {
 
   const [dataList, setDataList] = useState([]);
   const [dataListDt, setDataListDt] = useState([]);
-  const [dataListFS, setDataListFS] = useState([]);
   useEffect(() => {
     axios(`http://localhost:5000/api/bikes`).then(
       ({ data }) => setDataList(data)
@@ -288,12 +286,7 @@ const expiredApp = () => {
   }, []);
   useEffect(() => {
     axios(`http://localhost:5000/api/posts`).then(
-      ({ data }) => setDataListDt(data)
-    );
-  }, []);
-  useEffect(() => {
-    axios(`http://localhost:5000/api/fashions`).then(
-      ({ data }) => setDataListFS(data)
+      ({ data }) => setDataList(data)
     );
   }, []);
   // const item={};
@@ -316,19 +309,6 @@ const expiredApp = () => {
     console.log('data id: ', text)
 
     axios.patch(`http://localhost:5000/api/posts/${text}`)
-      .then(({ data }) => {
-        // setDataList(data);
-        // console.log('data', data.status);
-        window.location.reload();
-      }
-        // console.log(dataList)
-      )
-  };
-  const handleClickFS = (text) => {
-    console.log('Click happened');
-    console.log('data id: ', text)
-
-    axios.patch(`http://localhost:5000/api/fashions/${text}`)
       .then(({ data }) => {
         // setDataList(data);
         // console.log('data', data.status);
@@ -360,61 +340,13 @@ const expiredApp = () => {
       {/* <Table
 dataSource={dataList}
 columns={columns}
-/> */}
-  
+/> */} 
+      <center textAlign='left'> QUẢN LÝ TIN ĐIỆN THOẠI</center>
       <table className='table--container'>
      
-      <tr   className='TT'> 
-      
-      <td colSpan="4"> QUẢN LÝ TIN XE CỘ  </td></tr>
-        <tbody>
-
-          <tr className='thea'>
-
-            <td className='header-text'>Tên</td>
-
-            <td className='header-text'>Email</td>
-            <td className='header-text'>Thao Tác</td>
-            <td className='header-text'>Xử  Lý</td>
-          </tr>
-
-          {dataList && dataList.map(
-            (bike) => {
-
-              const { text, brand, _id, status } = bike;
-
-              return status === "Chưa duyệt" ? (
-                <tr >
-                  <td > {text}</td>
-                  {/* <td > {_id}</td> */}
-                  <td>{brand}</td>
-                  <td> {status}</td>
-                  <td style={{ textAlign: 'center' }}>
-                    <Button
-                      onClick={() => handleClick(_id)}
-                    >
-                      Duyệt
-                    </Button>
-                    {/* { render: (text, record) => handleConfirmBill(record)} */}
-
-                  </td>
-                </tr>
-              ) : ('')
-            }
-          )
-
-          }
-          {/* {this.renderTableData()} */}
-        </tbody>
-      </table>
-    
-      <table className='table--container'>
-      <tr   className='TT'> 
-      
-      <td colSpan="4"> QUẢN LÝ TIN ĐIỆN THOẠI </td></tr>
        
         <tbody>
-<tr><center>Quản lý</center></tr>
+
           <tr className='thea'>
 
             <td className='header-text'>Tên</td>
@@ -427,17 +359,17 @@ columns={columns}
           {dataListDt && dataListDt.map(
             (dt) => {
 
-              const { text, _id, status ,price} = dt;
+              // const { text, brand, _id, status } = dt;
 
-              return status === "Chưa duyệt" ? (
+              return dt.status === "Chưa duyệt" ? (
                 <tr >
-                  <td > {text}</td>
+                  <td > {dt.text}</td>
                   {/* <td > {_id}</td> */}
-                  <td>{price}</td>
-                  <td> {status}</td>
+                  <td>{dt.brand}</td>
+                  <td> {dt.status}</td>
                   <td style={{ textAlign: 'center' }}>
                     <Button
-                      onClick={() => handleClickDt(_id)}
+                      onClick={() => handleClickDt(dt.id)}
                     >
                       Duyệt
                     </Button>
@@ -454,52 +386,6 @@ columns={columns}
         </tbody>
       </table>
 
-      <table className='table--container'>
-     
-      <tr   className='TT'> 
-      
-      <td colSpan="4"> QUẢN LÝ TIN THỜI TRANG  </td></tr>
-        <tbody>
-
-          <tr className='thea'>
-
-            <td className='header-text'>Tên</td>
-
-            <td className='header-text'>Email</td>
-            <td className='header-text'>Thao Tác</td>
-            <td className='header-text'>Xử  Lý</td>
-          </tr>
-
-          {setDataListFS && dataListFS.map(
-            (fs) => {
-
-              const { text, brand, _id, status ,size} = fs;
-
-              return status === "Chưa duyệt" ? (
-                <tr >
-                  <td > {text}</td>
-                  {/* <td > {_id}</td> */}
-                  <td>{size}</td>
-                  <td> {status}</td>
-                  <td style={{ textAlign: 'center' }}>
-                    <Button
-                      onClick={() => handleClickFS(_id)}
-                    >
-                      Duyệt
-                    </Button>
-                    {/* { render: (text, record) => handleConfirmBill(record)} */}
-
-                  </td>
-                </tr>
-              ) : ('')
-            }
-          )
-
-          }
-          {/* {this.renderTableData()} */}
-        </tbody>
-      </table>
-    
     </>
 
   );

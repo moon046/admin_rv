@@ -197,10 +197,16 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Row, Col, Form } from 'react-bootstrap';
 import axios from 'axios';
 import {
-  Grid, Button,
+  Grid, Button
 
-} from 'semantic-ui-react'
+} from 'semantic-ui-react';
+// import {Alert} from "@mui";
+// import Alert from '@mui/material/Alert';
+// import IconButton from '@mui/material/IconButton';
+// import CloseIcon from '@mui/icons-material/Close';
 import { Link } from 'react-router-dom';
+
+import { CAlert, CButton } from '@coreui/react';
 import { useTable, useGlobalFilter, useSortBy, usePagination, useRowSelect, useRowState, useAsyncDebounce } from 'react-table';
 import HtmlHead from 'components/html-head/HtmlHead';
 import BreadcrumbList from 'components/breadcrumb-list/BreadcrumbList';
@@ -310,11 +316,23 @@ const HappeningApp = () => {
   //   state: { pageIndex, pageSize, sortBy },
   // } = tableInstance;
   const [dataListBikes, setDataListBikes] = useState([]);
+  const [dataListDT, setDataListDT] = useState([]);
+  const [dataListFS, setDataListFS] = useState([]);
   // const [dataListMoblie, setDataList] = useState([]);
   // const [dataList, setDataList] = useState([]);
   useEffect(() => {
+    axios(`http://localhost:5000/api/posts`).then(
+      ({ data }) => setDataListDT(data)
+    );
+  }, []);
+  useEffect(() => {
     axios(`http://localhost:5000/api/bikes`).then(
       ({ data }) => setDataListBikes(data)
+    );
+  }, []);
+  useEffect(() => {
+    axios(`http://localhost:5000/api/fashions`).then(
+      ({ data }) => setDataListFS(data)
     );
   }, []);
   // useEffect(() => {
@@ -467,9 +485,12 @@ const HappeningApp = () => {
   //     console.log('...error : ', e);
   //   }
   // }, [sortBy, dispatch, pageIndex, pageSize, term]);
+  // const [open, setOpen] = React.useState(true);
+  const [visible, setVisible] = useState(false)
   const Dele = (id) => {
     axios.delete(`http://localhost:5000/api/bikes/${id}`).then((res) => {
-      alert("Xóa thành công");
+      
+    
       window.location.reload();
     })
      .catch((err)=>{
@@ -477,12 +498,31 @@ const HappeningApp = () => {
 
     }
     )    
-    
-    
-      
-  
   }
+  const DeleDT = (id) => {
+    axios.delete(`http://localhost:5000/api/posts/${id}`).then((res) => {
+      
+    
+      window.location.reload();
+    })
+     .catch((err)=>{
+      alert("Xóa thất bại");
 
+    }
+    )    
+  }
+  const DeleFS = (id) => {
+    axios.delete(`http://localhost:5000/api/fashions/${id}`).then((res) => {
+      
+    
+      window.location.reload();
+    })
+     .catch((err)=>{
+      alert("Xóa thất bại");
+
+    }
+    )    
+  }
   const [dataList, setDataList] = useState([]);
   useEffect(() => {
     axios(`http://localhost:5000/api/bikes`).then(
@@ -512,7 +552,12 @@ const HappeningApp = () => {
 dataSource={dataList}
 columns={columns}
 /> */}
+<CAlert color="primary" dismissible visible={visible} onClose={() => setVisible(false)}>Xóa thành công rồi đó bà dà</CAlert>
+
       <table className='table--container'>
+      <tr   className='TT'> 
+      
+      <td colSpan="4"> QUẢN LÝ TIN XE CỘ  </td></tr>
         <tbody>
 
           <tr className='thea'>
@@ -535,12 +580,16 @@ columns={columns}
                   <td>{brand}</td>
                   <td> {status}</td>
                   <td style={{ textAlign: 'center' }}>
-                  
-                    <Button
-                      onClick={() => Dele(_id)}
+                
+                    <CButton
+                      onClick={() => 
+                        {Dele(_id);
+                        setVisible(true);
+                      }
+                    }
                     >
                       Xóa
-                    </Button>
+                    </CButton>
                   </td>
                 </tr>
               ) : ('')
@@ -551,7 +600,98 @@ columns={columns}
           {/* {this.renderTableData()} */}
         </tbody>
       </table>
+      <table className='table--container'>
+      <tr   className='TT'> 
+      
+      <td colSpan="4"> QUẢN LÝ TIN ĐIỆN THOẠI  </td></tr>
+        <tbody>
 
+          <tr className='thea'>
+
+            <td className='header-text'>Tên</td>
+
+            <td className='header-text'>Email</td>
+            <td className='header-text'>Trạng Thái</td>
+            <td className='header-text'>Xử lý</td>
+          </tr>
+
+          {dataListDT && dataListDT.map(
+            (dt) => {
+
+              const { text, brand, _id, status } = dt;
+
+              return status === "Đã duyệt" ? (
+                <tr key={_id}>
+                  <td > {text}</td>
+                  <td>{brand}</td>
+                  <td> {status}</td>
+                  <td style={{ textAlign: 'center' }}>
+                
+                    <CButton
+                      onClick={() => 
+                        {DeleDT(_id);
+                        setVisible(true);
+                      }
+                    }
+                    >
+                      Xóa
+                    </CButton>
+                  </td>
+                </tr>
+              ) : ('')
+            }
+          )
+
+          }
+          {/* {this.renderTableData()} */}
+        </tbody>
+      </table>
+      <table className='table--container'>
+      <tr   className='TT'> 
+      
+      <td colSpan="4"> QUẢN LÝ TIN THỜI TRANG </td></tr>
+        <tbody>
+
+          <tr className='thea'>
+
+            <td className='header-text'>Tên</td>
+
+            <td className='header-text'>Email</td>
+            <td className='header-text'>Trạng Thái</td>
+            <td className='header-text'>Xử lý</td>
+          </tr>
+
+          {dataListFS && dataListFS.map(
+            (fs) => {
+
+              const { text, brand, _id, status } = fs;
+
+              return status === "Đã duyệt" ? (
+                <tr key={_id}>
+                  <td > {text}</td>
+                  <td>{brand}</td>
+                  <td> {status}</td>
+                  <td style={{ textAlign: 'center' }}>
+                
+                    <CButton
+                      onClick={() => 
+                        {DeleFS(_id);
+                        setVisible(true);
+                      }
+                    }
+                    >
+                      Xóa
+                    </CButton>
+                  </td>
+                </tr>
+              ) : ('')
+            }
+          )
+
+          }
+          {/* {this.renderTableData()} */}
+        </tbody>
+      </table>
     </>
 
   );

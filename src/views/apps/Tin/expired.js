@@ -281,9 +281,21 @@ const expiredApp = () => {
   const [dataList, setDataList] = useState([]);
   const [dataListDt, setDataListDt] = useState([]);
   const [dataListFS, setDataListFS] = useState([]);
+  const [dataListTC, setDataListTC] = useState([]);
+  const [dataListTD, setDataListTD] = useState([]);
   useEffect(() => {
     axios(`http://localhost:5000/api/bikes`).then(
       ({ data }) => setDataList(data)
+    );
+  }, []);
+  useEffect(() => {
+    axios(`http://localhost:5000/api/works`).then(
+      ({ data }) => setDataListTD(data)
+    );
+  }, []);
+  useEffect(() => {
+    axios(`http://localhost:5000/api/pets`).then(
+      ({ data }) => setDataListTC(data)
     );
   }, []);
   useEffect(() => {
@@ -316,6 +328,32 @@ const expiredApp = () => {
     console.log('data id: ', text)
 
     axios.patch(`http://localhost:5000/api/posts/${text}`)
+      .then(({ data }) => {
+        // setDataList(data);
+        // console.log('data', data.status);
+        window.location.reload();
+      }
+        // console.log(dataList)
+      )
+  };
+  const handleClickTC = (text) => {
+    console.log('Click happened');
+    console.log('data id: ', text)
+
+    axios.patch(`http://localhost:5000/api/pets/${text}`)
+      .then(({ data }) => {
+        // setDataList(data);
+        // console.log('data', data.status);
+        window.location.reload();
+      }
+        // console.log(dataList)
+      )
+  };
+  const handleClickTD = (text) => {
+    console.log('Click happened');
+    console.log('data id: ', text)
+
+    axios.patch(`http://localhost:5000/api/works/${text}`)
       .then(({ data }) => {
         // setDataList(data);
         // console.log('data', data.status);
@@ -399,7 +437,7 @@ columns={columns}
 
                   </td>
                 </tr>
-              ) : ('')
+              ) : (' ')
             }
           )
 
@@ -445,7 +483,7 @@ columns={columns}
 
                   </td>
                 </tr>
-              ) : ('')
+              ) : (' ')
             }
           )
 
@@ -470,7 +508,7 @@ columns={columns}
             <td className='header-text'>Xử  Lý</td>
           </tr>
 
-          {setDataListFS && dataListFS.map(
+          {dataListFS && dataListFS.map(
             (fs) => {
 
               const { text, brand, _id, status ,size} = fs;
@@ -491,7 +529,7 @@ columns={columns}
 
                   </td>
                 </tr>
-              ) : ('')
+              ) : (' ')
             }
           )
 
@@ -499,7 +537,92 @@ columns={columns}
           {/* {this.renderTableData()} */}
         </tbody>
       </table>
-    
+      
+      <table className='table--container'>
+     
+      <tr   className='TT'> 
+      
+      <td colSpan="4"> QUẢN LÝ TIN THÚ CƯNG </td></tr>
+        <tbody>
+
+          <tr className='thea'>
+
+            <td className='header-text'>Tên</td>
+
+            <td className='header-text'>Email</td>
+            <td className='header-text'>Thao Tác</td>
+            <td className='header-text'>Xử  Lý</td>
+          </tr>
+
+          {dataListTC && dataListTC.map(
+            (tc) => {
+
+              const { text, brand, _id, status ,size} = tc;
+
+              return status === "Chưa duyệt" ? (
+                <tr >
+                  <td > {text}</td>
+                  {/* <td > {_id}</td> */}
+                  <td>{size}</td>
+                  <td> {status}</td>
+                  <td style={{ textAlign: 'center' }}>
+                    <Button
+                      onClick={() => handleClickTC(_id)}
+                    >
+                      Duyệt
+                    </Button>
+                  </td>
+                </tr>
+              ) : (' ')
+            }
+          )
+
+          }
+        </tbody>
+      </table>
+      <table className='table--container'>
+     
+     <tr   className='TT'> 
+     
+     <td colSpan="4"> QUẢN LÝ TIN TUYỂN DỤNG</td></tr>
+       <tbody>
+
+         <tr className='thea'>
+
+           <td className='header-text'>Tên</td>
+
+           <td className='header-text'>Email</td>
+           <td className='header-text'>Thao Tác</td>
+           <td className='header-text'>Xử  Lý</td>
+         </tr>
+
+         {dataListTD && dataListTD.map(
+           (td) => {
+
+             const { text, brand, _id, status ,size} = td;
+
+             return status === "Chưa duyệt" ? (
+               <tr >
+                 <td > {text}</td>
+                 {/* <td > {_id}</td> */}
+                 <td>{size}</td>
+                 <td> {status}</td>
+                 <td style={{ textAlign: 'center' }}>
+                   <Button
+                     onClick={() => handleClickTD(_id)}
+                   >
+                     Duyệt
+                   </Button>
+                 </td>
+               </tr>
+             ) : (' ')
+           }
+         )
+
+         }
+       </tbody>
+     </table>
+   
     </>
 
   );

@@ -101,6 +101,18 @@ const ContactsApp = () => {
       ({ data }) => setDataList(data)
     );
   }, []);
+  const Dele = (id) => {
+    axios.delete(`http://localhost:5000/api/users/${id}`).then((res) => {
+      
+    
+      window.location.reload();
+    })
+     .catch((err)=>{
+      alert("Xóa thất bại");
+
+    }
+    )    
+  }
   return (
     <>
 
@@ -131,18 +143,23 @@ columns={columns}
 
             <td className='header-text'>Tên</td>
             <td className='header-text'>Email</td>
+            {/* <td className='header-text'>ID</td> */}
             <td className='header-text'>Thao Tác</td>
           </tr>
 
           {dataList && dataList.map(
             (user) => {
-              const { name, email, id } = user;
+              const { name, email, _id } = user;
               return (
-                <tr key={id} className="header">
+                <tr key={_id} className="header">
+
                   <td > {name}</td>
                   <td>{email}</td>
+                  {/* <td > {_id}</td> */}
                   <td style={ {textAlign:'center'}}>
-                  <Button>
+                  <Button 
+                  onClick={()=> Dele(_id)}
+                  >
                     Xóa
                   </Button>
                   </td>

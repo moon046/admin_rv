@@ -75,15 +75,15 @@ const DashboardsDefault = () => {
 
           {/* Top Buttons Start */}
           <Col md="5" className="d-flex align-items-start justify-content-end">
-            <Button
+            {/* <Button
               variant="outline-primary"
               className="btn-icon btn-icon-start btn-icon w-100 w-md-auto ms-1"
               onClick={() => {
                 setTourEnabled(true);
-              }}
-            >
-              <CsLineIcons icon="flag" /> <span>Dạo một vòng với toi nhé, hihi</span>
-            </Button>
+              }} */}
+            {/* > */}
+              {/* <CsLineIcons icon="flag" /> <span>Dạo một vòng với toi nhé, hihi</span> */}
+            {/* </Button> */}
           </Col>
           {/* Top Buttons End */}
         </Row>

@@ -5,23 +5,28 @@ import axios from 'axios';
 import {
   Grid, Button, Modal
 
-} from 'semantic-ui-react'
+} from 'semantic-ui-react';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import Moment from "react-moment";
+import dateFormat, { masks } from "dateformat";
+// import { DatePicker, Radio, Space } from 'antd';
+import { format } from 'date-fns'
 import { Link } from 'react-router-dom';
+import DatepickerBasic from 'views/interface/forms/controls/datepicker/DatepickerBasic';
+import Datepicker from 'views/interface/forms/controls/datepicker/Datepicker';
+import DatepickerFilter from 'views/interface/forms/controls/datepicker/DatepickerFilter';
+import DatepickerMonth from 'views/interface/forms/controls/datepicker/DatepickerMonth';
+import { DatepickerRangeMultiple } from 'views/interface/forms/controls/datepicker/DatepickerRange';
 import { useTable, useGlobalFilter, useSortBy, usePagination, useRowSelect, useRowState, useAsyncDebounce } from 'react-table';
 import HtmlHead from 'components/html-head/HtmlHead';
 import BreadcrumbList from 'components/breadcrumb-list/BreadcrumbList';
 import { createFashion, deleteFashion, getFashions, updateFashion } from './FashionSlice';
-import ItemList from './components/ItemList';
-import ItemListPagination from './components/ItemListPagination';
-import AddEditModal from './components/AddEditModal';
-import ItemListHeader from './components/ItemListHeader';
-import CheckAll from './components/CheckGH';
-import SearchInput from './components/SearchInput';
-import AddNewButton from './components/AddNewButton';
-import MobileSortDropdown from './components/MobileSortDropdown';
-import DeleteConfirmModal from './components/DeleteConfirmModal';
+
 import "../table.scss"
-import  DT from"./DT"
+import DT from "./DT"
+
+
 
 const expiredApp = () => {
   const title = 'Quản Lý Tin';
@@ -32,110 +37,27 @@ const expiredApp = () => {
     { to: 'apps', title: 'Tin đẫ hết hạn' },
   ];
 
-  const columns = React.useMemo(() => {
-    return [
-      {
-        Header: 'Hình ảnh',
-        // accessor: 'name', 
-        sortable: true,
-        headerClassName: 'ol-3 col-lg-4 d-flex flex-column mb-lg-0 pe-3 d-flex',
-        Cell: ({ cell }) => {
-          return (
-            <a
-              className="list-item-heading body"
-              href="#!"
-              onClick={(e) => {
-                e.preventDefault();
-              }}
-            >
-              {cell.value}
-            </a>
-          );
-        },
-      },
-      {
-        Header: 'Tên bài viết',
-        accessor: 'email',
-        sortable: true,
-        headerClassName: 'col-3 col-lg-3 d-flex flex-column pe-1 justify-content-center',
-      },
-      {
-        Header: 'Xóa',
-        accessor: 'phone',
-        sortable: true,
-        headerClassName: 'col-3 col-lg-3 d-flex flex-column pe-1 justify-content-center',
-      },
-      // {
-      //   Header: 'Mật Khẩu',
-      //   accessor: 'password',
-      //   sortable: true,
-      //   headerClassName: 'col-3 col-lg-1 d-flex flex-column pe-1 justify-content-center',
-      // },
-      {
-        Header: '',
-        id: 'action',
-        headerClassName: '',
-        Cell: ({ row }) => {
-          const { checked, onChange } = row.getToggleRowSelectedProps();
-          return <Form.Check className="form-check float-end mt-1" type="checkbox" checked={checked} onChange={onChange} />;
-        },
-      },
-    ];
-  }, []);
-
   const dispatch = useDispatch();
-  // const { contacts: data, pageCount, loading } = useSelector((state) => state.contacts);
-  // const [dataList, setDataList] = useState([]);
   const [isOpenAddEditModal, setIsOpenAddEditModal] = useState(false);
   const [isOpenDeleteConfirmModal, setIsOpenDeleteConfirmModal] = useState(false);
   const [term, setTerm] = useState('');
   const [open, setOpen] = React.useState(false)
-
-  // const [data,setData]=useState();
-  // const tableInstance = useTable(
-  //   {
-  //     columns,
-  //     data,
-  //     // isOpenAddEditModal,
-  //     // setIsOpenAddEditModal,
-  //     // isOpenDeleteConfirmModal,
-  //     // setIsOpenDeleteConfirmModal,
-  //     // manualPagination: true,
-  //     // manualFilters: true,
-  //     // manualSortBy: true,
-  //     // autoResetPage: false,
-  //     // autoResetSortBy: false,
-  //     // // pageCount,
-  //     // defaultPagesize:10,
-  //     // initialState: { pageSize: 8, pageIndex: 0, sortBy: [{ id: 'name', desc: false }], hiddenColumns: ['id'] },
-  //   },
-  //   useGlobalFilter,
-  //   useSortBy,
-  //   usePagination,
-  //   useRowSelect,
-  //   useRowState
-  // );
-  // const {
-  //   state: { pageIndex, pageSize, sortBy },
-  // } = tableInstance;
+  const arr = [];
   const [dataListBikes, setDataListBikes] = useState([]);
-  // const [dataListMoblie, setDataList] = useState([]);
-  // const [dataList, setDataList] = useState([]);
   useEffect(() => {
-    axios(`http://localhost:5000/api/bikes`).then(
-      ({ data }) => setDataListBikes(data)
-    );
+    axios.get(`http://localhost:5000/api/bikes`).then(
+      ({ data }) => {
+        setDataListBikes(data)
+        for (let i = 0; i < data.length; i += 1) {
+          arr.push(data[i])
+        }
+        //  setDataListBikes(data)
+        // arr.push(data),
+        // localStorage.setItem("dataBike", JSON.stringify(arr));
+      });
   }, []);
-  // useEffect(() => {
-  //   axios(`http://localhost:5000/api/bikes`).then(
-  //     ({ data }) => setDataList(data)
-  //   );
-  // }, []);
-  // useEffect(() => {
-  //   axios(`http://localhost:5000/api/bikes`).then(
-  //     ({ data }) => setDataList(data)
-  //   );
-  // }, []);
+
+
   const [limit, setLimit] = useState([3, 3, 3, 3]);
   const updateLimit = (index) => {
     const l = Object.assign([...limit], {
@@ -143,150 +65,106 @@ const expiredApp = () => {
     })
     setLimit(l)
   }
-  // const itemview = (item) => {
-  //   return (
-  //     // <List.Item>
-  //     <>
-  //       <Grid grow>
-  //         <Grid.Col span={12}>
-  //           <div className='container'>
-
-  //             {/* <Group> */}
-  //               <div className='logo'>
-
-  //                 {/* <Image
-  //                   src={item.thongtincongty.logo}
-  //                   alt="ISO logo"
-  //                   radius={120}
-  //                 /> */}
-  //               </div>
+  // const [startDate, setStartDate] = useState()
+  // new Date('2022/02/02'));
+  // const [endDate, setEndDate] = useState(
+  // new Date('2022/12/8')
+  // );
+  // const [startDate, setStartDate] = useState(new Date());
+  // const [endDate, setEndDate] = useState(new Date());
+  // const onChange = (dates) => {
+  //   const [start, end] = dates;
+  //   setStartDate(start);
+  //   setEndDate(end);
+  //   console.log("start",startDate);
+  //   console.log("end",endDate);
 
 
-  //               <div >
-
-  //                 <div  >
-  //                   {item.thongtincongty.name}
-  //                 </div>
-  //                 <div  >
-  //                   {item.thongtincongty.diachi}
-  //                 </div>
-
-  //                 <Grid  >
-  //                   <Grid.Col span={4}>
-  //                     {/* <FontAwesomeIcon icon={PeopleGroup} className={classes.icon} />    */}
-  //                      {item.thongtincongty.soluong}</Grid.Col>
-  //                   <Grid.Col span={4}> 
-
-  //                    {item.thongtincongty.loaihinhcongty}</Grid.Col>
-  //                   <Grid.Col span={4}>
-
-  //                       {item.thongtincongty.loaihinhkinhdoanh}</Grid.Col>
-  //                 </Grid>
-  //               </div>
-  //             {/* </Group> */}
-
-  //           </div>
-  //         </Grid.Col>
-  //       </Grid>
-
-  //       <Grid>
-  //         <Grid.Col span={12}>
-  //           <div className='danh-sach-vi-tri'>
-  //             {item.vitriungtuyen.slice(0, 3).map((index) => {
-  //               console.log('[]', 3);
-  //               return (
-  //                 <Grid key={index} columns={60}>
-  //                   <Grid.Col span={3}>
-  //                    {/* <Link></Link> */}
-  //                   </Grid.Col>
-  //                   <Grid.Col span={35}>
-  //                  <Link
-  //                       href={{
-  //                         pathname: '/thuctap/nguoiungtuyen/components/detail',
-  //                       }}
-  //                     >
-  //                       <a >
-  //                        {/* onClick={() => setOpened(true)}> */}
-  //                         {index.tenvitri}</a>
-  //                     </Link>
-  //                   </Grid.Col>
-  //                   <Grid.Col span={10}>
-  //                     {index.mucluong}
-  //                   </Grid.Col>
-  //                   <Grid.Col span={10}>
-  //                     {index.ngay}
-  //                   </Grid.Col>
-  //                 </Grid>
-  //               )
-  //             })}
-  //             <center>
-  //               <Button
-  //                 variant="subtle"
-  //                 radius="xl"
-  //                >
-  //                 {/* // onClick={() => updateLimit(i)} */}
-
-
-  //               </Button>
-  //             </center>
-  //           </div>
-  //         </Grid.Col>
-  //       </Grid>
-  //       {/* </List.Item> */}
-  //     </>
-  //   );
-  // }
-  // const addItem = ({ item }) => {
-  //   dispatch(createContact({ sortBy, pageSize, pageIndex, item }));
-  // };
-
-  // const editItem = ({ item }) => {
-  //   dispatch(updateContact({ sortBy, pageSize, pageIndex, item }));
-  // };
-
-  // const deleteItem = (items) => {
-  //   dispatch(deleteContact({ sortBy, pageSize, pageIndex, ids: items.map((x) => x.id) }));
   // };
 
   const searchItem = useAsyncDebounce((val) => {
     setTerm(val || undefined);
   }, 200);
-
-
-  // useEffect(() => {
-  //   if (loading) {
-  //     document.body.classList.add('spinner');
-  //   } else {
-  //     document.body.classList.remove('spinner');
-  //   }
-  //   return () => {
-  //     document.body.classList.remove('spinner');
-  //   };
-  // }, [loading]);
-
-  // useEffect(() => {
-  //   axios(`http://localhost:5000/api/users`).then(
-  //     ({ data }) => setDataList(data)
-  //   );
-  // }, []);
-  // useEffect(() => {
-  //   try {
-  //     dispatch(getFashions({ term, sortBy, pageSize, pageIndex }));
-  //   } catch (e) {
-  //     console.log('...error : ', e);
-  //   }
-  // }, [sortBy, dispatch, pageIndex, pageSize, term]);
-
-
   const [dataList, setDataList] = useState([]);
+  const [dataListT, setDataListT] = useState([]);
   const [dataListDt, setDataListDt] = useState([]);
   const [dataListFS, setDataListFS] = useState([]);
   const [dataListTC, setDataListTC] = useState([]);
   const [dataListTD, setDataListTD] = useState([]);
   useEffect(() => {
     axios(`http://localhost:5000/api/bikes`).then(
-      ({ data }) => setDataList(data)
-    );
+      ({ data }) => {
+        for (let i = 0; i < data.length; i += 1) {
+          const { _id, name, status } = data[i];
+          const dateTemp = new Date(data[i].date);
+          const datehethan = new Date();
+          dateTemp.setDate(dateTemp.getDate() + Number(data[i].date1))
+          if (dateTemp.getTime() < datehethan.getTime()) {
+            axios.patch(`http://localhost:5000/api/bikes/hh/${_id}`)
+          }
+        }
+      }
+    )
+  }, []);
+  useEffect(() => {
+    axios(`http://localhost:5000/api/posts`).then(
+      ({ data }) => {
+        for (let i = 0; i < data.length; i += 1) {
+          const { _id, name, status } = data[i];
+          const dateTemp = new Date(data[i].date);
+          const datehethan = new Date();
+          dateTemp.setDate(dateTemp.getDate() + Number(data[i].date1))
+          if (dateTemp.getTime() < datehethan.getTime()) {
+            axios.patch(`http://localhost:5000/api/posts/hh/${_id}`)
+          }
+        }
+      }
+    )
+  }, []);
+  useEffect(() => {
+    axios(`http://localhost:5000/api/fashions`).then(
+      ({ data }) => {
+        for (let i = 0; i < data.length; i += 1) {
+          const { _id, name, status } = data[i];
+          const dateTemp = new Date(data[i].date);
+          const datehethan = new Date();
+          dateTemp.setDate(dateTemp.getDate() + Number(data[i].date1))
+          if (dateTemp.getTime() < datehethan.getTime()) {
+            axios.patch(`http://localhost:5000/api/fashions/hh/${_id}`)
+          }
+        }
+      }
+    )
+  }, []);
+  useEffect(() => {
+    axios(`http://localhost:5000/api/pets`).then(
+      ({ data }) => {
+        for (let i = 0; i < data.length; i += 1) {
+          const { _id, name, status } = data[i];
+          const dateTemp = new Date(data[i].date);
+          const datehethan = new Date();
+          dateTemp.setDate(dateTemp.getDate() + Number(data[i].date1))
+          if (dateTemp.getTime() < datehethan.getTime()) {
+            axios.patch(`http://localhost:5000/api/pets/hh/${_id}`)
+          }
+        }
+      }
+    )
+  }, []);
+  useEffect(() => {
+    axios(`http://localhost:5000/api/works`).then(
+      ({ data }) => {
+        for (let i = 0; i < data.length; i += 1) {
+          const { _id, name, status } = data[i];
+          const dateTemp = new Date(data[i].date);
+          const datehethan = new Date();
+          dateTemp.setDate(dateTemp.getDate() + Number(data[i].date1))
+          if (dateTemp.getTime() < datehethan.getTime()) {
+            axios.patch(`http://localhost:5000/api/works/hh/${_id}`)
+          }
+        }
+      }
+    )
   }, []);
   useEffect(() => {
     axios(`http://localhost:5000/api/works`).then(
@@ -298,6 +176,11 @@ const expiredApp = () => {
       ({ data }) => setDataListTC(data)
     );
   }, []);
+  // useEffect(() => {
+  //   axios(`http://localhost:5000/api/bikes`).then(
+  //     ({ data }) => setDataListBikes(data)
+  //   );
+  // }, []);
   useEffect(() => {
     axios(`http://localhost:5000/api/posts`).then(
       ({ data }) => setDataListDt(data)
@@ -310,71 +193,73 @@ const expiredApp = () => {
   }, []);
   // const item={};
   const [dataListTemp, setDataListTemp] = useState([]);
-  const handleClick = (text) => {
-    console.log('Click happened');
-    console.log('data id: ', text)
 
-    axios.patch(`http://localhost:5000/api/bikes/${text}`)
-      .then(({ data }) => {
-        // setDataList(data);
-        // console.log('data', data.status);
-        window.location.reload();
+  const Dele = (id) => {
+    axios.delete(`http://localhost:5000/api/bikes/${id}`).then((res) => {
+      window.location.reload();
+    })
+      .catch((err) => {
+        alert("Xóa thất bại");
       }
-        // console.log(dataList)
+      )
+  }
+  const handleClickDt = (id) => {
+    axios.delete(`http://localhost:5000/api/posts/${id}`).then((res) => {
+
+      window.location.reload();
+    })
+      .catch((err) => {
+        alert("Xóa thất bại");
+
+      }
       )
   };
-  const handleClickDt = (text) => {
-    console.log('Click happened');
-    console.log('data id: ', text)
+  const handleClickTC = (id) => {
+    axios.delete(`http://localhost:5000/api/pets/${id}`).then((res) => {
 
-    axios.patch(`http://localhost:5000/api/posts/${text}`)
-      .then(({ data }) => {
-        // setDataList(data);
-        // console.log('data', data.status);
-        window.location.reload();
+      window.location.reload();
+    })
+      .catch((err) => {
+        alert("Xóa thất bại");
+
       }
-        // console.log(dataList)
       )
   };
-  const handleClickTC = (text) => {
-    console.log('Click happened');
-    console.log('data id: ', text)
+  const handleClickTD = (id) => {
+    axios.delete(`http://localhost:5000/api/works/${id}`).then((res) => {
 
-    axios.patch(`http://localhost:5000/api/pets/${text}`)
-      .then(({ data }) => {
-        // setDataList(data);
-        // console.log('data', data.status);
-        window.location.reload();
+      window.location.reload();
+    })
+      .catch((err) => {
+        alert("Xóa thất bại");
+
       }
-        // console.log(dataList)
       )
   };
-  const handleClickTD = (text) => {
-    console.log('Click happened');
-    console.log('data id: ', text)
+  const handleClickFS = (id) => {
+    axios.delete(`http://localhost:5000/api/fashions/${id}`).then((res) => {
 
-    axios.patch(`http://localhost:5000/api/works/${text}`)
-      .then(({ data }) => {
-        // setDataList(data);
-        // console.log('data', data.status);
-        window.location.reload();
+      window.location.reload();
+    })
+      .catch((err) => {
+        alert("Xóa thất bại");
+
       }
-        // console.log(dataList)
       )
   };
-  const handleClickFS = (text) => {
-    console.log('Click happened');
-    console.log('data id: ', text)
-
-    axios.patch(`http://localhost:5000/api/fashions/${text}`)
-      .then(({ data }) => {
-        // setDataList(data);
-        // console.log('data', data.status);
-        window.location.reload();
-      }
-        // console.log(dataList)
-      )
-  };
+  const [startDate, setStartDate] = useState(null)
+  const [endDate, setEndDate] = useState(new Date()
+  );
+  console.log("start", startDate);
+  // localStorage.setItem("start", JSON.stringify(startDate))
+  console.log("end", endDate)
+  // const n ={  <Moment format="DD/MM/YYYY">{startDate}</Moment}
+  // console.log("ád",n)
+  const y = dateFormat(startDate, "paddedShortDate");
+  // console.log("Á", startDate.getTime())
+  const dNew = new Date(startDate)
+  const kNew= new Date( endDate)
+  console.log("Á", dNew.getTime())
   return (
     <>
 
@@ -390,146 +275,188 @@ const expiredApp = () => {
                 <BreadcrumbList items={breadcrumbs} />
               </div>
             </Col>
+            <div className="w-100 d-md-none" />
+            <Col xs="auto" className="d-flex align-items-start justify-content-end">
+              {/* <DatepickerRangeMultiple/>
+           */}
+              <Row className="g-4">
+                <Col>{" "}</Col>
+                <Col>{" "}</Col>
+                <Col>Thời gian lọc:</Col>
+                <Col>
+                  <DatePicker
+                    className="form-control"
+                    selected={startDate}
+                    onChange={(date) => { setStartDate(date) }}
+                    // ;localStorage.setItem("start", JSON.stringify(date)) }}
+                    selectsStart
+                    startDate={startDate}
+                    endDate={endDate}
+                    placeholderText="Chọn ngày"
+                  />
+                </Col>
+
+                <Col>
+                  <DatePicker
+                    className="form-control"
+                    selected={endDate}
+                    onChange={(date) => setEndDate(date)}
+                    selectsEnd
+                    startDate={startDate}
+                    endDate={endDate}
+                    minDate={startDate}
+                    placeholderText="Chọn ngày"
+                  />
+                </Col>
+              </Row>
+            </Col>
           </Row>
         </div>
       </div>
       {/* Title and Top Buttons End */}
-
-      {/* <Table
-dataSource={dataList}
-columns={columns}
-/> */}
-  
+      {/* {JSON.parse(localStorage.getItem("start"))} */}
+      <Moment format="DD/MM/YYYY">{startDate}</Moment>
       <table className='table--container'>
-     
-      <tr   className='TT'> 
-      
-      <td colSpan="4"> QUẢN LÝ TIN XE CỘ  </td></tr>
+        <tr className='TT'>
+          <td colSpan="5"> QUẢN LÝ TIN XE CỘ  </td></tr>
         <tbody>
-
           <tr className='thea'>
-
-            <td className='header-text'>Tên</td>
-
-            <td className='header-text'>Email</td>
-            <td className='header-text'>Thao Tác</td>
+            <td className='header-text'>Tiêu đề bài đăng</td>
+            <td className='header-text'>Ngày đăng tin</td>
+            <td className='header-text'>Số ngày đăng tin</td>
+            <td className='header-text'>Trạng thái</td>
             <td className='header-text'>Xử  Lý</td>
           </tr>
 
-          {dataList && dataList.map(
+          {dataListBikes.map(
             (bike) => {
+              const { text, brand, _id, status, date1, date } = bike;
+              const newday = dateFormat(date, "paddedShortDate");
+              const Newd = new Date(newday);
+              const kq = dNew - Newd;
+              const kqk = kNew-Newd;
+              return (
+                (status === "Hết hạn" && kq<0 && kqk>0) ? (  
 
-              const { text, brand, _id, status } = bike;
+                   <tr >
 
-              return status === "Chưa duyệt" ? (
-                <tr >
                   <td > {text}</td>
-                  {/* <td > {_id}</td> */}
-                  <td>{brand}</td>
-                  <td> {status}</td>
+                  <td>{newday}</td>
+                  <td> {date1} </td>
+                  <td>
+                    {status}
+                  </td>
                   <td style={{ textAlign: 'center' }}>
                     <Button
-                      onClick={() => handleClick(_id)}
+                      onClick={() => Dele(_id)}
                     >
-                      Duyệt
+                      Xóa
                     </Button>
-                    {/* { render: (text, record) => handleConfirmBill(record)} */}
-
                   </td>
-                </tr>
-              ) : (' ')
-            }
-          )
 
-          }
-          {/* {this.renderTableData()} */}
+                </tr>) :
+                 (""
+                ))
+           
+           
+          
+
+             })}
         </tbody>
       </table>
-    
       <table className='table--container'>
-      <tr   className='TT'> 
-      
-      <td colSpan="4"> QUẢN LÝ TIN ĐIỆN THOẠI </td></tr>
-       
+        <tr className='TT'>
+
+          <td colSpan="5"> QUẢN LÝ TIN ĐIỆN THOẠI </td></tr>
+
         <tbody>
-<tr><center>Quản lý</center></tr>
+          {/* <tr><center>Quản lý</center></tr> */}
           <tr className='thea'>
 
-            <td className='header-text'>Tên</td>
-
-            <td className='header-text'>Email</td>
-            <td className='header-text'>Thao Tác</td>
+          <td className='header-text'>Tiêu đề bài đăng</td>
+            <td className='header-text'>Ngày đăng tin</td>
+            <td className='header-text'>Số ngày đăng tin</td>
+            <td className='header-text'>Trạng thái</td>
             <td className='header-text'>Xử  Lý</td>
           </tr>
 
           {dataListDt && dataListDt.map(
             (dt) => {
 
-              const { text, _id, status ,price} = dt;
+              const { text, _id, status, price,date,date1 } = dt;
 
-              return status === "Chưa duyệt" ? (
-                <tr >
+              const newday = dateFormat(date, "paddedShortDate");
+              const Newd = new Date(newday);
+              const kq = dNew - Newd;
+              const kqk = kNew-Newd;
+              return (
+                (status === "Hết hạn" && kq<0 && kqk>0) ? (  
+                   <tr >
                   <td > {text}</td>
-                  {/* <td > {_id}</td> */}
-                  <td>{price}</td>
-                  <td> {status}</td>
+                  <td>{newday}</td>
+                  <td> {date1} </td>
+                  <td>
+                    {status}
+                  </td>
                   <td style={{ textAlign: 'center' }}>
                     <Button
-                      onClick={() => handleClickDt(_id)}
+                      onClick={() => Dele(_id)}
                     >
-                      Duyệt
+                      Xóa
                     </Button>
-                    {/* { render: (text, record) => handleConfirmBill(record)} */}
-
                   </td>
-                </tr>
-              ) : (' ')
+
+                </tr>) :
+                 (""
+                ))
+           
             }
           )
-
           }
           {/* {this.renderTableData()} */}
         </tbody>
       </table>
 
       <table className='table--container'>
-     
-      <tr   className='TT'> 
-      
-      <td colSpan="4"> QUẢN LÝ TIN THỜI TRANG  </td></tr>
+        <tr className='TT'>
+          <td colSpan="5"> QUẢN LÝ TIN THỜI TRANG  </td></tr>
         <tbody>
-
           <tr className='thea'>
-
-            <td className='header-text'>Tên</td>
-
-            <td className='header-text'>Email</td>
-            <td className='header-text'>Thao Tác</td>
+          <td className='header-text'>Tiêu đề bài đăng</td>
+            <td className='header-text'>Ngày đăng tin</td>
+            <td className='header-text'>Số ngày đăng tin</td>
+            <td className='header-text'>Trạng thái</td>
             <td className='header-text'>Xử  Lý</td>
           </tr>
-
           {dataListFS && dataListFS.map(
             (fs) => {
 
-              const { text, brand, _id, status ,size} = fs;
+              const { text, _id, status, price,date,date1 } = fs;
 
-              return status === "Chưa duyệt" ? (
-                <tr >
+              const newday = dateFormat(date, "paddedShortDate");
+              const Newd = new Date(newday);
+              const kq = dNew - Newd;
+              const kqk = kNew-Newd;
+              return (
+                (status === "Hết hạn" && kq<0 && kqk>0) ? (  
+                   <tr >
                   <td > {text}</td>
-                  {/* <td > {_id}</td> */}
-                  <td>{size}</td>
-                  <td> {status}</td>
+                  <td>{newday}</td>
+                  <td> {date1} </td>
+                  <td>
+                    {status}
+                  </td>
                   <td style={{ textAlign: 'center' }}>
                     <Button
-                      onClick={() => handleClickFS(_id)}
+                      onClick={() => Dele(_id)}
                     >
-                      Duyệt
+                      Xóa
                     </Button>
-                    {/* { render: (text, record) => handleConfirmBill(record)} */}
-
                   </td>
-                </tr>
-              ) : (' ')
+
+                </tr>) :
+                 (""
+                ))
             }
           )
 
@@ -537,43 +464,52 @@ columns={columns}
           {/* {this.renderTableData()} */}
         </tbody>
       </table>
-      
+
       <table className='table--container'>
-     
-      <tr   className='TT'> 
-      
-      <td colSpan="4"> QUẢN LÝ TIN THÚ CƯNG </td></tr>
+
+        <tr className='TT'>
+
+          <td colSpan="5"> QUẢN LÝ TIN THÚ CƯNG </td></tr>
         <tbody>
 
           <tr className='thea'>
 
-            <td className='header-text'>Tên</td>
-
-            <td className='header-text'>Email</td>
-            <td className='header-text'>Thao Tác</td>
+          <td className='header-text'>Tiêu đề bài đăng</td>
+            <td className='header-text'>Ngày đăng tin</td>
+            <td className='header-text'>Số ngày đăng tin</td>
+            <td className='header-text'>Trạng thái</td>
             <td className='header-text'>Xử  Lý</td>
           </tr>
 
           {dataListTC && dataListTC.map(
             (tc) => {
 
-              const { text, brand, _id, status ,size} = tc;
+              const { text, _id, status, price,date,date1 } = tc;
 
-              return status === "Chưa duyệt" ? (
-                <tr >
+              const newday = dateFormat(date, "paddedShortDate");
+              const Newd = new Date(newday);
+              const kq = dNew - Newd;
+              const kqk = kNew-Newd;
+              return (
+                (status === "Hết hạn" && kq<0 && kqk>0) ? (  
+                   <tr >
                   <td > {text}</td>
-                  {/* <td > {_id}</td> */}
-                  <td>{size}</td>
-                  <td> {status}</td>
+                  <td>{newday}</td>
+                  <td> {date1} </td>
+                  <td>
+                    {status}
+                  </td>
                   <td style={{ textAlign: 'center' }}>
                     <Button
-                      onClick={() => handleClickTC(_id)}
+                      onClick={() => Dele(_id)}
                     >
-                      Duyệt
+                      Xóa
                     </Button>
                   </td>
-                </tr>
-              ) : (' ')
+
+                </tr>) :
+                 (""
+                ))
             }
           )
 
@@ -581,48 +517,57 @@ columns={columns}
         </tbody>
       </table>
       <table className='table--container'>
-     
-     <tr   className='TT'> 
-     
-     <td colSpan="4"> QUẢN LÝ TIN TUYỂN DỤNG</td></tr>
-       <tbody>
 
-         <tr className='thea'>
+        <tr className='TT'>
 
-           <td className='header-text'>Tên</td>
+          <td colSpan="5"> QUẢN LÝ TIN TUYỂN DỤNG</td></tr>
+        <tbody>
 
-           <td className='header-text'>Email</td>
-           <td className='header-text'>Thao Tác</td>
-           <td className='header-text'>Xử  Lý</td>
-         </tr>
+          <tr className='thea'>
 
-         {dataListTD && dataListTD.map(
-           (td) => {
+          <td className='header-text'>Tiêu đề bài đăng</td>
+            <td className='header-text'>Ngày đăng tin</td>
+            <td className='header-text'>Số ngày đăng tin</td>
+            <td className='header-text'>Trạng thái</td>
+            <td className='header-text'>Xử  Lý</td>
+          </tr>
 
-             const { text, brand, _id, status ,size} = td;
+          {dataListTD && dataListTD.map(
+            (td) => {
 
-             return status === "Chưa duyệt" ? (
-               <tr >
-                 <td > {text}</td>
-                 {/* <td > {_id}</td> */}
-                 <td>{size}</td>
-                 <td> {status}</td>
-                 <td style={{ textAlign: 'center' }}>
-                   <Button
-                     onClick={() => handleClickTD(_id)}
-                   >
-                     Duyệt
-                   </Button>
-                 </td>
-               </tr>
-             ) : (' ')
-           }
-         )
+              const { text, _id, status, price,date,date1 } = td;
 
-         }
-       </tbody>
-     </table>
-   
+              const newday = dateFormat(date, "paddedShortDate");
+              const Newd = new Date(newday);
+              const kq = dNew - Newd;
+              const kqk = kNew-Newd;
+              return (
+                (status === "Hết hạn" && kq<0 && kqk>0) ? (  
+                   <tr >
+                  <td > {text}</td>
+                  <td>{newday}</td>
+                  <td> {date1} </td>
+                  <td>
+                    {status}
+                  </td>
+                  <td style={{ textAlign: 'center' }}>
+                    <Button
+                      onClick={() => Dele(_id)}
+                    >
+                      Xóa
+                    </Button>
+                  </td>
+
+                </tr>) :
+                 (""
+                ))
+            }
+          )
+
+          }
+        </tbody>
+      </table>
+
     </>
 
   );

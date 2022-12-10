@@ -21,7 +21,7 @@ border: 1px solid;
 
   th {
     background-color: #08183c;
-    color: white;
+    color: rgb(0, 0, 0);
     font-size: 12px;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     border: 1px solid;
@@ -44,13 +44,14 @@ border: 1px solid;
   }
 }
 .TT{
-  text-align: center !important;
-  color:brown !important;
+  text-align: center  !important;
+  color:rgb(0, 0, 0) !important;
+  font-weight: bold;
   background-color: burlywood;
-  
+  min-height: 100px !important;
 }
 .header-text {
-  color: #c7dac7;
+  color: black;
 text-align: center;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
@@ -58,13 +59,13 @@ text-align: center;
 .customer--table tr {
   &:hover {
     cursor: pointer;
-    background-color: #f7fcf9;
+    background-color: #161817;
   }
 }
 
 .thea {
   background-color: #24352b;
-  color: white;
+  color: black;
   font-size: 16px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
@@ -75,4 +76,32 @@ text-align: center;
 
 p {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+// từ đây
+table, td,th {
+  border-bottom: 1px  solid #24352b  !important;
+  border-right:1px  #24352b  solid;
+
+}
+table, th, td{
+border:1px solid #868585;
+}
+table{
+border-collapse:collapse;
+width:100%;
+}
+th, td{
+text-align:left;
+padding:10px;
+}
+table tr:nth-child(odd){
+background-color:#eee;
+}
+table tr:nth-child(even){
+background-color:white;
+}
+table tr:nth-child(1){
+background-color:skyblue;
+text-align: center;
+justify-content: center;
 }

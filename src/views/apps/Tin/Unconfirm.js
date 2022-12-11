@@ -189,12 +189,11 @@ columns={columns}
         <tbody>
 
           <tr className='thea'>
+          <td className='header-text'>Tên</td>
 
-            <td className='header-text'>Tên</td>
-
-            <td className='header-text'>Email</td>
-            <td className='header-text'>Thao Tác</td>
-            <td className='header-text'>Xử  Lý</td>
+<td className='header-text'>Giá</td>
+<td className='header-text'>Trạng thái</td>
+<td className='header-text'>Xử  Lý</td>
           </tr>
 
           {dataList && dataList.map(
@@ -233,13 +232,13 @@ columns={columns}
       <td colSpan="4"> QUẢN LÝ TIN ĐIỆN THOẠI </td></tr>
        
         <tbody>
-<tr><center>Quản lý</center></tr>
+
           <tr className='thea'>
 
             <td className='header-text'>Tên</td>
 
-            <td className='header-text'>Email</td>
-            <td className='header-text'>Thao Tác</td>
+            <td className='header-text'>Giá</td>
+            <td className='header-text'>Trạng thái</td>
             <td className='header-text'>Xử  Lý</td>
           </tr>
 
@@ -282,11 +281,11 @@ columns={columns}
 
           <tr className='thea'>
 
-            <td className='header-text'>Tên</td>
+          <td className='header-text'>Tên</td>
 
-            <td className='header-text'>Email</td>
-            <td className='header-text'>Thao Tác</td>
-            <td className='header-text'>Xử  Lý</td>
+<td className='header-text'>Giá</td>
+<td className='header-text'>Trạng thái</td>
+<td className='header-text'>Xử  Lý</td>
           </tr>
 
           {dataListFS && dataListFS.map(
@@ -328,11 +327,11 @@ columns={columns}
 
           <tr className='thea'>
 
-            <td className='header-text'>Tên</td>
+          <td className='header-text'>Tên</td>
 
-            <td className='header-text'>Email</td>
-            <td className='header-text'>Thao Tác</td>
-            <td className='header-text'>Xử  Lý</td>
+<td className='header-text'>Giá</td>
+<td className='header-text'>Trạng thái</td>
+<td className='header-text'>Xử  Lý</td>
           </tr>
 
           {dataListTC && dataListTC.map(
@@ -370,11 +369,11 @@ columns={columns}
 
          <tr className='thea'>
 
-           <td className='header-text'>Tên</td>
+         <td className='header-text'>Tên</td>
 
-           <td className='header-text'>Email</td>
-           <td className='header-text'>Thao Tác</td>
-           <td className='header-text'>Xử  Lý</td>
+            <td className='header-text'>Giá</td>
+            <td className='header-text'>Trạng thái</td>
+            <td className='header-text'>Xử  Lý</td>
          </tr>
 
          {dataListTD && dataListTD.map(

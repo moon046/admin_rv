@@ -579,7 +579,7 @@ const HappeningApp = () => {
 dataSource={dataList}
 columns={columns}
 /> */}
-<CAlert color="primary" dismissible visible={visible} onClose={() => setVisible(false)}>Xóa thành công rồi đó bà dà</CAlert>
+<CAlert color="primary" dismissible visible={visible} onClose={() => setVisible(false)}>Xóa thành công</CAlert>
 
       <table className='table--container'>
       <tr   className='TT'> 

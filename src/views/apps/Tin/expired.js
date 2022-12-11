@@ -366,11 +366,9 @@ const expiredApp = () => {
       </table>
       <table className='table--container'>
         <tr className='TT'>
-
           <td colSpan="5"> QUẢN LÝ TIN ĐIỆN THOẠI </td></tr>
-
         <tbody>
-          {/* <tr><center>Quản lý</center></tr> */}
+         
           <tr className='thea'>
 
           <td className='header-text'>Tiêu đề bài đăng</td>
